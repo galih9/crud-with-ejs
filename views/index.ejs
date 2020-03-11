@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>MY APP</title>
+</head>
+
+<body>
+  <script>
+    state = "create";
+    name = "";
+    todo = "";
+    pres = function (param) {
+      console.log("clicked", JSON.parse(param), state)
+      let res = JSON.parse(param)
+      state = "update";
+      document.getElementById("updt").setAttribute("action", "/todo/" + res._id);
+      document.getElementById("name").removeAttribute("disabled");
+      document.getElementById("todo").removeAttribute("disabled");
+      document.getElementById("btne").removeAttribute("disabled");
+      // document.getElementById("id").value = res._id;
+      document.getElementById("name").value = res.name;
+      document.getElementById("todo").value = res.description;
+      document.getElementById("pmabar").style.display = "none";
+      document.getElementById("pngadu").style.display = "block";
+    }
+    close = function () {
+      document.getElementById("pmabar").style.display = "block";
+      document.getElementById("pngadu").style.display = "none";
+      console.log("pp")
+    }
+  </script>
+  <% if (Error == 'seeded') { %>
+  <script>alert('database has been seeded!');</script>
+  <% } %>
+  Simple TODO list <br>
+  <a href="/seed">click here to seed the database</a>
+  <table border="1" class="todos" style="margin-bottom:20px">
+    <tr>
+      <th>Name</th>
+      <th>Todo</th>
+      <th colspan="2">Action</th>
+    </tr>
+    <% for(var i=0; i<todos.length; i++) {%>
+    <tr class="todo">
+      <td width="300"><%= todos[i].name %></td>
+      <td width="300"><%= todos[i].description %></td>
+      <td><a href="/todos/<%= todos[i]._id %>">delete</a></td>
+      <td><a onclick="pres('<%=JSON.stringify(todos[i])%>')">update</a></td>
+    </tr>
+    <% } %>
+  </table>
+
+  <div id="pmabar" style="display: block;">
+    CREATE TODO
+    <form action="/todos" method="POST">
+      <input type="text" placeholder="name" name="name">
+      <input type="text" placeholder="description" name="description">
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+
+  <div id="pngadu" style="display: none;">
+    UPDATE TODO
+    <form action="/todo" id="updt" method="POST">
+      <input disabled type="text" placeholder="name" name="name" id="name">
+      <input disabled type="text" placeholder="description" name="description" id="todo">
+      <button disabled type="submit" id="btne">Submit</button>
+      <button>X</button>
+    </form>
+  </div>
+
+</body>
+
+</html>
